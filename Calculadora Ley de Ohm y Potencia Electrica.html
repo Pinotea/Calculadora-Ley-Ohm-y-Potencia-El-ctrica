@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ley de Ohm y Potencia Eléctrica</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .input {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .button {
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: rgba(59, 130, 246, 0.8);
+        }
+
+        input[type="number"] {
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        input[type="number"]::placeholder {
+            color: #666;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient text-white py-8">
+    <div class="container mx-auto px-4">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                CONSULTORIA EN INGENIERIA Y EFICIENCIA ENERGETICA
+            </h1>
+            <div class="flex justify-center items-center">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Fotografia%20Minor-4051DQMxdMZeQa4dPSd6soUkfPNPag.png" alt="Consultor de Ingeniería" class="w-20 h-20 rounded-full object-cover">
+            </div>
+        </header>
+
+        <div class="w-full max-w-2xl mx-auto">
+            <div class="card rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-semibold mb-4 text-center text-white">Ley de Ohm y Potencia Eléctrica</h2>
+                <p class="text-gray-200 mb-6 text-center">Ingrese al menos dos valores para calcular los restantes.</p>
+                <form id="calculadoraForm" class="space-y-4">
+                    <div>
+                        <label for="voltaje" class="block text-sm font-medium text-gray-200">Voltaje (V)</label>
+                        <input type="number" id="voltaje" class="mt-1 block w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="intensidad" class="block text-sm font-medium text-gray-200">Intensidad (A)</label>
+                        <input type="number" id="intensidad" class="mt-1 block w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="resistencia" class="block text-sm font-medium text-gray-200">Resistencia (Ω)</label>
+                        <input type="number" id="resistencia" class="mt-1 block w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label for="potencia" class="block text-sm font-medium text-gray-200">Potencia (W)</label>
+                        <input type="number" id="potencia" class="mt-1 block w-full px-3 py-2 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="button" id="calcular" class="flex-1 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Calcular
+                        </button>
+                        <button type="button" id="reiniciar" class="flex-1 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Reiniciar
+                        </button>
+                    </div>
+                </form>
+                <div id="resultado" class="mt-6 p-4 bg-white/10 rounded-md hidden">
+                    <!-- Los resultados se insertarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calcular').addEventListener('click', function() {
+            const voltaje = parseFloat(document.getElementById('voltaje').value);
+            const intensidad = parseFloat(document.getElementById('intensidad').value);
+            const resistencia = parseFloat(document.getElementById('resistencia').value);
+            const potencia = parseFloat(document.getElementById('potencia').value);
+
+            let resultados = {};
+            let valoresIngresados = 0;
+
+            if (!isNaN(voltaje)) valoresIngresados++;
+            if (!isNaN(intensidad)) valoresIngresados++;
+            if (!isNaN(resistencia)) valoresIngresados++;
+            if (!isNaN(potencia)) valoresIngresados++;
+
+            if (valoresIngresados < 2) {
+                document.getElementById('resultado').innerHTML = '<p class="text-red-400">Error: Ingrese al menos dos valores para realizar el cálculo.</p>';
+                document.getElementById('resultado').classList.remove('hidden');
+                return;
+            }
+
+            try {
+                if (!isNaN(voltaje) && !isNaN(intensidad)) {
+                    resultados.resistencia = voltaje / intensidad;
+                    resultados.potencia = voltaje * intensidad;
+                } else if (!isNaN(voltaje) && !isNaN(resistencia)) {
+                    resultados.intensidad = voltaje / resistencia;
+                    resultados.potencia = Math.pow(voltaje, 2) / resistencia;
+                } else if (!isNaN(voltaje) && !isNaN(potencia)) {
+                    resultados.intensidad = potencia / voltaje;
+                    resultados.resistencia = Math.pow(voltaje, 2) / potencia;
+                } else if (!isNaN(intensidad) && !isNaN(resistencia)) {
+                    resultados.voltaje = intensidad * resistencia;
+                    resultados.potencia = Math.pow(intensidad, 2) * resistencia;
+                } else if (!isNaN(intensidad) && !isNaN(potencia)) {
+                    resultados.voltaje = potencia / intensidad;
+                    resultados.resistencia = potencia / Math.pow(intensidad, 2);
+                } else if (!isNaN(resistencia) && !isNaN(potencia)) {
+                    resultados.voltaje = Math.sqrt(potencia * resistencia);
+                    resultados.intensidad = Math.sqrt(potencia / resistencia);
+                }
+
+                let resultadoHTML = '<h3 class="text-lg font-semibold mb-2 text-white">Resultados:</h3>';
+                
+                if (!isNaN(voltaje) || resultados.voltaje) {
+                    resultadoHTML += `<p class="text-gray-200">Voltaje: ${(voltaje || resultados.voltaje).toFixed(2)} V</p>`;
+                }
+                if (!isNaN(intensidad) || resultados.intensidad) {
+                    resultadoHTML += `<p class="text-gray-200">Intensidad: ${(intensidad || resultados.intensidad).toFixed(2)} A</p>`;
+                }
+                if (!isNaN(resistencia) || resultados.resistencia) {
+                    resultadoHTML += `<p class="text-gray-200">Resistencia: ${(resistencia || resultados.resistencia).toFixed(2)} Ω</p>`;
+                }
+                if (!isNaN(potencia) || resultados.potencia) {
+                    resultadoHTML += `<p class="text-gray-200">Potencia: ${(potencia || resultados.potencia).toFixed(2)} W</p>`;
+                }
+
+                document.getElementById('resultado').innerHTML = resultadoHTML;
+                document.getElementById('resultado').classList.remove('hidden');
+            } catch (error) {
+                console.error("Error al calcular:", error);
+                document.getElementById('resultado').innerHTML = '<p class="text-red-400">Error: ' + error.message + '</p>';
+                document.getElementById('resultado').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('reiniciar').addEventListener('click', function() {
+            document.getElementById('calculadoraForm').reset();
+            document.getElementById('resultado').innerHTML = '';
+            document.getElementById('resultado').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
